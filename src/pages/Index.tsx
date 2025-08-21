@@ -78,7 +78,9 @@ const Index = () => {
         </div>
       </section>
 
-      <HowItWorks />
+      <div id="how-it-works">
+        <HowItWorks />
+      </div>
 
       {/* Footer */}
       <footer className="border-t bg-card py-12">

@@ -38,11 +38,25 @@ export const HeroSection = () => {
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="group">
+            <Button 
+              size="lg" 
+              className="group"
+              onClick={() => {
+                const browseSection = document.getElementById('browse');
+                browseSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
               Explorar Tickets
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
-            <Button size="lg" variant="outline">
+            <Button 
+              size="lg" 
+              variant="outline"
+              onClick={() => {
+                const howItWorksSection = document.getElementById('how-it-works');
+                howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
               Cómo Funciona
             </Button>
           </div>

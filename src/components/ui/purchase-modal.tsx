@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./dialog";
 import { Button } from "./button";
 import { Badge } from "./badge";
@@ -23,6 +24,7 @@ interface PurchaseModalProps {
 type PurchaseState = "wallet" | "connecting" | "connected" | "processing" | "success" | "error";
 
 export const PurchaseModal = ({ isOpen, onClose, ticket }: PurchaseModalProps) => {
+  const navigate = useNavigate();
   const [purchaseState, setPurchaseState] = useState<PurchaseState>("wallet");
   const [quantity, setQuantity] = useState(1);
   const { toast } = useToast();
@@ -50,17 +52,14 @@ export const PurchaseModal = ({ isOpen, onClose, ticket }: PurchaseModalProps) =
     }
   };
 
-  const simulatePurchase = async () => {
-    setPurchaseState("processing");
-    
-    // Simulate transaction processing
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    setPurchaseState("success");
-    toast({
-      title: "¡Compra Exitosa!",
-      description: `Has comprado ${quantity} ticket(s) para ${ticket.title}`,
+  const goToCheckout = () => {
+    navigate("/checkout", { 
+      state: { 
+        ticket, 
+        quantity 
+      } 
     });
+    onClose();
   };
 
   const resetModal = () => {
@@ -174,11 +173,11 @@ export const PurchaseModal = ({ isOpen, onClose, ticket }: PurchaseModalProps) =
             </div>
 
             <Button 
-              onClick={simulatePurchase}
+              onClick={goToCheckout}
               className="w-full"
               size="lg"
             >
-              Confirmar Compra
+              Ir al Checkout
             </Button>
           </div>
         );
