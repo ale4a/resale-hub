@@ -1,4 +1,4 @@
-# Ticket Resale Platform
+# Ticket Resale Platform 
 
 A modern, secure ticket resale marketplace built with React, TypeScript, and Tailwind CSS.
 
