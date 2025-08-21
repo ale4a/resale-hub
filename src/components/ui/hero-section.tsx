@@ -67,30 +67,30 @@ export const HeroSection = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <Shield className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <h3 className="font-semibold">Seguro</h3>
-                <p className="text-sm text-muted-foreground">Transacciones protegidas</p>
-              </div>
+               <div>
+                 <h3 className="font-semibold text-foreground">Seguro</h3>
+                 <p className="text-sm text-foreground/80">Transacciones protegidas</p>
+               </div>
             </div>
             
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <Zap className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <h3 className="font-semibold">Rápido</h3>
-                <p className="text-sm text-muted-foreground">Compra instantánea</p>
-              </div>
+               <div>
+                 <h3 className="font-semibold text-foreground">Rápido</h3>
+                 <p className="text-sm text-foreground/80">Compra instantánea</p>
+               </div>
             </div>
             
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <Globe className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <h3 className="font-semibold">Global</h3>
-                <p className="text-sm text-muted-foreground">Acceso mundial</p>
-              </div>
+               <div>
+                 <h3 className="font-semibold text-foreground">Global</h3>
+                 <p className="text-sm text-foreground/80">Acceso mundial</p>
+               </div>
             </div>
           </div>
         </div>

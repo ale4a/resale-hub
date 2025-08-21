@@ -172,13 +172,18 @@ export const PurchaseModal = ({ isOpen, onClose, ticket }: PurchaseModalProps) =
               </div>
             </div>
 
-            <Button 
-              onClick={goToCheckout}
-              className="w-full"
-              size="lg"
-            >
-              Ir al Checkout
-            </Button>
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground text-center">
+                Selecciona tu método de pago preferido en el checkout
+              </p>
+              <Button 
+                onClick={goToCheckout}
+                className="w-full"
+                size="lg"
+              >
+                Continuar al Pago
+              </Button>
+            </div>
           </div>
         );
 

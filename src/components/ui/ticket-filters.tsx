@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
-import { Calendar, Filter, Search } from "lucide-react";
+import { Calendar, Filter, Search, RotateCcw } from "lucide-react";
 
 interface FilterProps {
   onFilterChange: (filters: {
@@ -41,8 +41,14 @@ export const TicketFilters = ({ onFilterChange }: FilterProps) => {
           <Filter className="h-5 w-5 text-primary" />
           <h3 className="text-lg font-semibold">Filtrar Tickets</h3>
         </div>
-        <Button variant="ghost" size="sm" onClick={clearFilters}>
-          Limpiar
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={clearFilters}
+          className="flex items-center gap-2"
+        >
+          <RotateCcw className="h-4 w-4" />
+          Limpiar Filtros
         </Button>
       </div>
 
