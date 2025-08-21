@@ -21,43 +21,44 @@ export const HeroSection = () => {
           <div className="mb-6">
             <span className="inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
               <Zap className="mr-2 h-4 w-4" />
-              Plataforma Descentralizada
+              Ticket Resale Platform
             </span>
           </div>
-          
+
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-            El futuro de la{" "}
+            The Future of{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              reventa de tickets
+              Ticket Resale
             </span>
           </h1>
-          
+
           <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
-            Compra y vende tickets de forma segura usando tecnología blockchain. 
-            Sin intermediarios, sin estafas, solo transacciones directas y transparentes.
+            Buy and sell tickets safely and securely. No scams, no hidden fees,
+            just direct and transparent transactions with buyer protection.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="group"
               onClick={() => {
-                const browseSection = document.getElementById('browse');
-                browseSection?.scrollIntoView({ behavior: 'smooth' });
+                const browseSection = document.getElementById("browse");
+                browseSection?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Explorar Tickets
+              Browse Tickets
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="outline"
               onClick={() => {
-                const howItWorksSection = document.getElementById('how-it-works');
-                howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+                const howItWorksSection =
+                  document.getElementById("how-it-works");
+                howItWorksSection?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Cómo Funciona
+              How It Works
             </Button>
           </div>
 
@@ -67,30 +68,32 @@ export const HeroSection = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <Shield className="h-5 w-5 text-primary" />
               </div>
-               <div>
-                 <h3 className="font-semibold text-foreground">Seguro</h3>
-                 <p className="text-sm text-foreground/80">Transacciones protegidas</p>
-               </div>
+              <div>
+                <h3 className="font-semibold text-foreground">Secure</h3>
+                <p className="text-sm text-foreground/80">
+                  Protected transactions
+                </p>
+              </div>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <Zap className="h-5 w-5 text-primary" />
               </div>
-               <div>
-                 <h3 className="font-semibold text-foreground">Rápido</h3>
-                 <p className="text-sm text-foreground/80">Compra instantánea</p>
-               </div>
+              <div>
+                <h3 className="font-semibold text-foreground">Fast</h3>
+                <p className="text-sm text-foreground/80">Instant purchase</p>
+              </div>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <Globe className="h-5 w-5 text-primary" />
               </div>
-               <div>
-                 <h3 className="font-semibold text-foreground">Global</h3>
-                 <p className="text-sm text-foreground/80">Acceso mundial</p>
-               </div>
+              <div>
+                <h3 className="font-semibold text-foreground">Global</h3>
+                <p className="text-sm text-foreground/80">Worldwide access</p>
+              </div>
             </div>
           </div>
         </div>

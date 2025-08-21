@@ -10,19 +10,21 @@ const Index = () => {
   const [filters, setFilters] = useState({
     search: "",
     category: "",
-    date: ""
+    date: "",
   });
 
   const filteredTickets = useMemo(() => {
     return mockTickets.filter((ticket) => {
-      const matchesSearch = ticket.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-                           ticket.location.toLowerCase().includes(filters.search.toLowerCase());
-      
-      const matchesCategory = !filters.category || ticket.category === filters.category;
-      
+      const matchesSearch =
+        ticket.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        ticket.location.toLowerCase().includes(filters.search.toLowerCase());
+
+      const matchesCategory =
+        !filters.category || ticket.category === filters.category;
+
       // For date filtering, we'll implement basic logic
       const matchesDate = !filters.date || true; // Simplified for demo
-      
+
       return matchesSearch && matchesCategory && matchesDate;
     });
   }, [filters]);
@@ -31,16 +33,16 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
-      
+
       {/* Tickets Section */}
       <section id="browse" className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-              Tickets Disponibles
+              Available Tickets
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Descubre eventos increíbles y compra tus tickets de forma segura
+              Discover amazing events and buy your tickets safely and securely
             </p>
           </div>
 
@@ -71,7 +73,7 @@ const Index = () => {
           {filteredTickets.length === 0 && (
             <div className="text-center py-12">
               <p className="text-lg text-muted-foreground">
-                No se encontraron tickets que coincidan con tus filtros
+                No tickets found matching your filters
               </p>
             </div>
           )}
@@ -91,10 +93,10 @@ const Index = () => {
               <span className="text-xl font-bold">Ticket Resale</span>
             </div>
             <p className="text-muted-foreground mb-4">
-              La plataforma descentralizada para compra y venta de tickets
+              The trusted platform for buying and selling tickets
             </p>
             <p className="text-sm text-muted-foreground">
-              © 2024 Ticket Resale. Todos los derechos reservados.
+              © 2025 Ticket Resale. All rights reserved.
             </p>
           </div>
         </div>

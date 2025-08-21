@@ -1,73 +1,146 @@
-# Welcome to your Lovable project
+# Ticket Resale Platform
 
-## Project info
+A modern, secure ticket resale marketplace built with React, TypeScript, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/fbb46d6c-9775-4071-b1b0-4faf828ae0d1
+## Project Overview
 
-## How can I edit this code?
+This is a Web2 ticket resale platform that allows users to buy and sell event tickets safely and securely. The platform features:
 
-There are several ways of editing your application.
+- **Multiple Payment Methods**: Credit cards, PayPal, bank transfers, and cryptocurrency payments
+- **Crypto Integration**: Optional wallet connection for crypto payments with MetaMask support
+- **Buyer Protection**: Secure escrow system and buyer guarantees
+- **Modern UI**: Beautiful, responsive design built with shadcn/ui and Tailwind CSS
+- **Real-time Search**: Advanced filtering and search capabilities
+- **Mobile Responsive**: Works seamlessly across all devices
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/fbb46d6c-9775-4071-b1b0-4faf828ae0d1) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Technologies Used
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Frontend**: React 18 with TypeScript
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **Build Tool**: Vite
+- **Routing**: React Router
+- **State Management**: React Hooks
+- **Icons**: Lucide React
+- **Crypto Integration**: MetaMask wallet connection
 
-## How can I deploy this project?
+## Features
 
-Simply open [Lovable](https://lovable.dev/projects/fbb46d6c-9775-4071-b1b0-4faf828ae0d1) and click on Share -> Publish.
+### For Buyers
 
-## Can I connect a custom domain to my Lovable project?
+- Browse available tickets with advanced filtering
+- Multiple payment options including crypto
+- Secure payment processing
+- Instant ticket delivery via email
+- Buyer protection guarantees
 
-Yes, you can!
+### For Sellers (Coming Soon)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- List tickets for sale
+- Set pricing and availability
+- Track sales and earnings
+- Secure payment processing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Crypto Payment Features
+
+- MetaMask wallet integration
+- Secure message signing for payment authorization
+- Support for ETH, USDC, and other cryptocurrencies
+- Seamless Web2 experience with optional crypto payments
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- MetaMask extension (for crypto payments)
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd resale-hub
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+## Project Structure
+
+```
+src/
+├── components/ui/          # Reusable UI components
+├── pages/                  # Page components
+├── data/                   # Mock data and constants
+├── hooks/                  # Custom React hooks
+├── lib/                    # Utility functions
+└── contexts/               # React contexts (WalletProvider)
+```
+
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+### Code Style
+
+This project uses:
+
+- TypeScript for type safety
+- ESLint for code linting
+- Prettier for code formatting
+- Tailwind CSS for styling
+
+## Crypto Payment Flow
+
+1. **Select Crypto Payment**: Choose crypto payment option during checkout
+2. **Connect Wallet**: MetaMask will prompt for connection approval
+3. **Sign Authorization**: Sign a message authorizing the payment
+4. **Process Payment**: Payment is processed securely
+5. **Receive Tickets**: Tickets are sent to your email
+
+## Deployment
+
+The project can be deployed to any static hosting service:
+
+1. Build the project:
+
+```bash
+npm run build
+```
+
+2. Deploy the `dist` folder to your hosting service
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support or questions, please open an issue in the repository.

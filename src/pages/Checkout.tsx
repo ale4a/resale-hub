@@ -4,19 +4,40 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Calendar, MapPin, ArrowLeft, CreditCard, Wallet, Banknote, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  ArrowLeft,
+  CreditCard,
+  Banknote,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+  Wallet,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useWallet } from "@/contexts/WalletProvider";
 
-type PaymentMethod = "card" | "crypto" | "other";
-type PaymentState = "selecting" | "processing" | "success" | "error";
+type PaymentMethod = "card" | "paypal" | "bank" | "crypto";
+type PaymentState =
+  | "selecting"
+  | "connecting"
+  | "signing"
+  | "processing"
+  | "success"
+  | "error";
 
 export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(null);
+  const { isConnected, address, connect, signMessage } = useWallet();
+
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(
+    null
+  );
   const [paymentState, setPaymentState] = useState<PaymentState>("selecting");
-  
+
   // Get ticket data from location state (passed from ticket card)
   const ticket = location.state?.ticket;
 
@@ -30,24 +51,65 @@ export default function Checkout() {
 
   const handlePayment = async () => {
     if (!selectedPayment) return;
-    
-    setPaymentState("processing");
-    
+
+    if (selectedPayment === "crypto") {
+      if (!isConnected) {
+        setPaymentState("connecting");
+        try {
+          await connect();
+          setPaymentState("signing");
+        } catch (error) {
+          setPaymentState("error");
+          toast({
+            title: "Connection Failed",
+            description: "Failed to connect wallet. Please try again.",
+            variant: "destructive",
+          });
+          return;
+        }
+      } else {
+        setPaymentState("signing");
+      }
+
+      // Sign authorization message
+      try {
+        const message = `Crypto Payment Authorization\n\nEvent: ${
+          ticket.title
+        }\nQuantity: ${quantity}\nTotal: ${total} ${
+          ticket.currency
+        }\nTimestamp: ${new Date().toISOString()}\n\nI authorize this payment for the above ticket purchase.`;
+
+        await signMessage(message);
+        setPaymentState("processing");
+      } catch (error) {
+        setPaymentState("error");
+        toast({
+          title: "Signature Failed",
+          description:
+            "Failed to sign payment authorization. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      setPaymentState("processing");
+    }
+
     // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     // Simulate random success/failure
     if (Math.random() > 0.1) {
       setPaymentState("success");
       toast({
-        title: "¡Pago Exitoso!",
-        description: `Has comprado ${quantity} ticket(s) para ${ticket.title}`,
+        title: "Payment Successful!",
+        description: `You have purchased ${quantity} ticket(s) for ${ticket.title}`,
       });
     } else {
       setPaymentState("error");
       toast({
-        title: "Error en el Pago",
-        description: "No se pudo procesar el pago. Inténtalo de nuevo.",
+        title: "Payment Error",
+        description: "Could not process payment. Please try again.",
         variant: "destructive",
       });
     }
@@ -60,10 +122,12 @@ export default function Checkout() {
           <div className="space-y-6">
             {/* Payment Methods */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Selecciona tu método de pago</h3>
-              
+              <h3 className="text-lg font-semibold">
+                Select your payment method
+              </h3>
+
               <div className="grid gap-3">
-                <Card 
+                <Card
                   className={`cursor-pointer transition-all hover:shadow-md ${
                     selectedPayment === "card" ? "ring-2 ring-primary" : ""
                   }`}
@@ -72,13 +136,49 @@ export default function Checkout() {
                   <CardContent className="flex items-center p-4">
                     <CreditCard className="h-6 w-6 text-primary mr-3" />
                     <div className="flex-1">
-                      <h4 className="font-medium">Tarjeta de Crédito/Débito</h4>
-                      <p className="text-sm text-muted-foreground">Visa, Mastercard, American Express</p>
+                      <h4 className="font-medium">Credit/Debit Card</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Visa, Mastercard, American Express
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card 
+                <Card
+                  className={`cursor-pointer transition-all hover:shadow-md ${
+                    selectedPayment === "paypal" ? "ring-2 ring-primary" : ""
+                  }`}
+                  onClick={() => setSelectedPayment("paypal")}
+                >
+                  <CardContent className="flex items-center p-4">
+                    <Banknote className="h-6 w-6 text-primary mr-3" />
+                    <div className="flex-1">
+                      <h4 className="font-medium">PayPal</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Fast and secure online payments
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className={`cursor-pointer transition-all hover:shadow-md ${
+                    selectedPayment === "bank" ? "ring-2 ring-primary" : ""
+                  }`}
+                  onClick={() => setSelectedPayment("bank")}
+                >
+                  <CardContent className="flex items-center p-4">
+                    <Banknote className="h-6 w-6 text-primary mr-3" />
+                    <div className="flex-1">
+                      <h4 className="font-medium">Bank Transfer</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Direct bank transfer
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card
                   className={`cursor-pointer transition-all hover:shadow-md ${
                     selectedPayment === "crypto" ? "ring-2 ring-primary" : ""
                   }`}
@@ -87,37 +187,58 @@ export default function Checkout() {
                   <CardContent className="flex items-center p-4">
                     <Wallet className="h-6 w-6 text-primary mr-3" />
                     <div className="flex-1">
-                      <h4 className="font-medium">Criptomonedas</h4>
-                      <p className="text-sm text-muted-foreground">USDC, ETH, BTC</p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card 
-                  className={`cursor-pointer transition-all hover:shadow-md ${
-                    selectedPayment === "other" ? "ring-2 ring-primary" : ""
-                  }`}
-                  onClick={() => setSelectedPayment("other")}
-                >
-                  <CardContent className="flex items-center p-4">
-                    <Banknote className="h-6 w-6 text-primary mr-3" />
-                    <div className="flex-1">
-                      <h4 className="font-medium">Otros Métodos</h4>
-                      <p className="text-sm text-muted-foreground">PayPal, Transferencia bancaria</p>
+                      <h4 className="font-medium">Crypto Payment</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Pay with ETH, USDC, or other cryptocurrencies
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
               </div>
             </div>
 
-            <Button 
+            <Button
               onClick={handlePayment}
               disabled={!selectedPayment}
               className="w-full"
               size="lg"
             >
-              Pagar {total} {ticket.currency}
+              Pay {total} {ticket.currency}
             </Button>
+          </div>
+        );
+
+      case "connecting":
+        return (
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">
+                Connecting Wallet...
+              </h3>
+              <p className="text-muted-foreground">
+                Please approve the connection in your wallet
+              </p>
+            </div>
+          </div>
+        );
+
+      case "signing":
+        return (
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">
+                Signing Authorization...
+              </h3>
+              <p className="text-muted-foreground">
+                Please sign the payment authorization in your wallet
+              </p>
+            </div>
           </div>
         );
 
@@ -128,12 +249,11 @@ export default function Checkout() {
               <Loader2 className="h-8 w-8 text-primary animate-spin" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">Procesando Pago...</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                Processing Payment...
+              </h3>
               <p className="text-muted-foreground">
-                {selectedPayment === "crypto" 
-                  ? "Confirma la transacción en tu wallet"
-                  : "Procesando tu pago de forma segura"
-                }
+                Processing your payment securely
               </p>
             </div>
           </div>
@@ -146,17 +266,27 @@ export default function Checkout() {
               <CheckCircle className="h-8 w-8 text-success" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">¡Pago Exitoso!</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                Payment Successful!
+              </h3>
               <p className="text-muted-foreground">
-                Tus tickets han sido enviados a tu email y wallet
+                Your tickets have been sent to your email
               </p>
             </div>
             <div className="space-y-3">
-              <Button onClick={() => navigate("/")} className="w-full" size="lg">
-                Volver al Inicio
+              <Button
+                onClick={() => navigate("/")}
+                className="w-full"
+                size="lg"
+              >
+                Back to Home
               </Button>
-              <Button variant="outline" className="w-full">
-                Ver Mis Tickets
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate("/my-tickets")}
+              >
+                View My Tickets
               </Button>
             </div>
           </div>
@@ -169,17 +299,17 @@ export default function Checkout() {
               <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">Error en el Pago</h3>
+              <h3 className="text-lg font-semibold mb-2">Payment Error</h3>
               <p className="text-muted-foreground">
-                No se pudo procesar el pago. Inténtalo de nuevo.
+                Could not process payment. Please try again.
               </p>
             </div>
-            <Button 
-              onClick={() => setPaymentState("selecting")} 
-              className="w-full" 
+            <Button
+              onClick={() => setPaymentState("selecting")}
+              className="w-full"
               size="lg"
             >
-              Intentar de Nuevo
+              Try Again
             </Button>
           </div>
         );
@@ -195,14 +325,14 @@ export default function Checkout() {
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => navigate("/")}
               className="mr-4"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Volver
+              Back
             </Button>
             <h1 className="text-xl font-semibold">Checkout</h1>
           </div>
@@ -217,13 +347,13 @@ export default function Checkout() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Calendar className="h-5 w-5 mr-2" />
-                  Detalles del Evento
+                  Event Details
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex space-x-4">
-                  <img 
-                    src={ticket.image} 
+                  <img
+                    src={ticket.image}
                     alt={ticket.title}
                     className="h-24 w-24 rounded-lg object-cover"
                   />
@@ -250,21 +380,25 @@ export default function Checkout() {
             {/* Order Summary */}
             <Card>
               <CardHeader>
-                <CardTitle>Resumen del Pedido</CardTitle>
+                <CardTitle>Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
-                  <span>Precio por ticket:</span>
-                  <span>{ticket.price} {ticket.currency}</span>
+                  <span>Price per ticket:</span>
+                  <span>
+                    {ticket.price} {ticket.currency}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Cantidad:</span>
+                  <span>Quantity:</span>
                   <span>{quantity}</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-semibold text-lg">
                   <span>Total:</span>
-                  <span>{total} {ticket.currency}</span>
+                  <span>
+                    {total} {ticket.currency}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -274,11 +408,9 @@ export default function Checkout() {
           <div>
             <Card>
               <CardHeader>
-                <CardTitle>Pago</CardTitle>
+                <CardTitle>Payment</CardTitle>
               </CardHeader>
-              <CardContent>
-                {renderPaymentContent()}
-              </CardContent>
+              <CardContent>{renderPaymentContent()}</CardContent>
             </Card>
           </div>
         </div>
