@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@/contexts/WalletProvider";
+import { GaslessSDK } from "gasless-core";
 
 type PaymentMethod = "card" | "paypal" | "bank" | "crypto";
 type PaymentState =
@@ -49,27 +50,29 @@ export default function Checkout() {
   const quantity = location.state?.quantity || 1;
   const total = ticket.price * quantity;
 
+  const USDC_TOKEN_ADDRESS = "0x0A527504d9Bc26189A51DB8a7D6957D1C4275e05";
+  
+  const gasless = new GaslessSDK({
+    chainPreset: "mantle-sepolia",
+    environment: "local", // Points to localhost:3001
+  });
+
+  const sendTransaction = async () => {
+    const userAddress = await gasless.connectWallet();
+    console.log("userAddress", userAddress);
+    const result = await gasless.transfer({
+      to: "0x5a63721c458f41cD99499857c1Fe4B17B2582bB7",
+      amount: 1000000n, // 1 USDC (6 decimals)
+      token: USDC_TOKEN_ADDRESS,
+    });
+    console.log("result", result);
+  };
+
   const handlePayment = async () => {
     if (!selectedPayment) return;
 
     if (selectedPayment === "crypto") {
-      if (!isConnected) {
-        setPaymentState("connecting");
-        try {
-          await connect();
-          setPaymentState("signing");
-        } catch (error) {
-          setPaymentState("error");
-          toast({
-            title: "Connection Failed",
-            description: "Failed to connect wallet. Please try again.",
-            variant: "destructive",
-          });
-          return;
-        }
-      } else {
-        setPaymentState("signing");
-      }
+      await sendTransaction();
 
       // Sign authorization message
       try {
